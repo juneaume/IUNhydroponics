@@ -49,7 +49,7 @@ while True:
 		timestamp = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 		date = datetime.datetime.now().strftime("%Y-%m-%d")
 		file = open(date + "_results.csv", "a")
-		string = timestamp + "\t" + data1 + "\r\n"
+		string = timestamp + " , " + data1 + "\r\n"
 		file.write(string)
 		print(timestamp + "\t Average: {:.2f}*C, {:.2f}% \t Sensor 1: {:.2f}*C, {:.2f}% \t Sensor 2: {:.2f}*C, {:.2f}% \t Sensor 3: {:.2f}*C, {:.2f}%" .format(
 			avg(temps), avg(hums), temps[0], hums[0], temps[1], hums[1], temps[2], hums[2]))
