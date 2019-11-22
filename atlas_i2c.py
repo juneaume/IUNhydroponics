@@ -1,9 +1,10 @@
 import io
 import fcntl
+import datetime
 import time
 
 class atlas_i2c:
-	long_timeout = 1.5  ## the timeout needed to query readings and calibrations
+	long_timeout = 2.0  ## the timeout needed to query readings and calibrations
 	short_timeout = .5  # timeout for regular commands
 	default_bus = 1  # the default bus for I2C on the newer Raspberry Pis, certain older boards use bus 0
 	default_address = 99  # the default address for the pH sensor
@@ -36,20 +37,28 @@ class atlas_i2c:
 		res = self.file_read.read(num_of_bytes)  # read from the board
 		# remove the null characters to get the response
 		if type (res[0]) is str:
+
 			response = [i for i in res if i != '\x00']
+
+			timestamp = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+
 			if ord(response[0]) == 1:  # if the response isnt an error
 			# change MSB to 0 for all received characters except the first and get a list of characters
 				char_list = list(map(lambda x: chr(ord(x) & ~0x80), list(response[1:])))
 				# NOTE: having to change the MSB to 0 is a glitch in the raspberry pi, and you shouldn't have to do this!
-				return ''.join(char_list)
+				return (timestamp + "\t" + ''.join(char_list))
 			else:
-				return "Error"
+				time.sleep(self.long_timeout)
+				return self.read()
 		else:
+			timestamp = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+
 			if res[0] == 1:
 				char_list = list(map(lambda x: chr(x & ~0x80), list(res[1:])))
-				return ''.join(char_list)
+				return (str(timestamp) + "\t" + ''.join(char_list))
 			else:
-				return "Error"
+				time.sleep(self.long_timeout)
+				return self.read()
 
 	def query(self, string):
         # write a command to the board, wait the correct timeout, and read the response
