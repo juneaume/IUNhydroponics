@@ -54,12 +54,12 @@ while True:
 
 		string = timestamp + " , " + data1 + "\r\n"
 
-		if os.path.isfile("/home/pi/" + date + "_results.csv") == False:
-			file = open("/home/pi/" + date + "_results.csv", "a")
+		if os.path.isfile("/home/pi/TempHum_Results/" + date + "_results.csv") == False:
+			file = open("/home/pi/TempHum_Results/" + date + "_results.csv", "a")
 			file.write("Date,Time,AvgTemp,AvgHum,S1Temp,S1Hum,S2Temp,S2Hum,S3Temp,S3Hum\n")
 			file.write(string)
 		else:
-			file = open("/home/pi/" + date + "_results.csv", "a")
+			file = open("/home/pi/TempHum_Results/" + date + "_results.csv", "a")
 			file.write(string)
 
 
@@ -72,6 +72,6 @@ while True:
 	GPIO.output(chan_list, GPIO.HIGH)
 
 	file.close()
-	time.sleep(29.0)
+	time.sleep(279.0)
 
 
