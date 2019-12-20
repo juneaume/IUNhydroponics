@@ -1,8 +1,11 @@
 import matplotlib.pyplot as plt
 import matplotlib
+import matplotlib.mlab as mlab
+import matplotlib.gridspec as gridspec
 import numpy as np
 import pandas as pd
 from tkinter.filedialog import askopenfilename
+import datetime
 
 file = pd.read_csv(askopenfilename(), sep=',', index_col=1)
 #file = pd.read_csv("/home/pi/TempHum_Results/2019-12-19_results.csv", sep=',', index_col=1)
@@ -33,7 +36,7 @@ def xtickval(value):
 			if (i % 10 == 0) == True:
 				toUse.append(df.index[i])
 		elif len(value) > 300:
-			if (i % 100 == 0) == True:
+			if (i % 50 == 0) == True:
 				toUse.append(df.index[i])
 	return toUse
 
@@ -58,6 +61,8 @@ ax1.annotate((
 	bbox=bbox, arrowprops = arrowprops)
 
 plt.grid(True)
+
+
 
 ax2 = plt.subplot(212)
 ax2.plot(times, ahums, color="purple")
