@@ -18,11 +18,6 @@ import datetime, os
 #twoh = otherh.append(s1h, ignore_index=True)
 #allh = twoh.append(s2h, ignore_index=True)
 
-
-
-
-
-
 class Buttons():
 
 
@@ -108,7 +103,6 @@ class Buttons():
 		plt.show()
 
 	def newfile(self):
-		direc = os.environ['HOME']
 		file = pd.read_csv(filedialog.askopenfilename(
 			initialdir = (os.environ['HOME'] + "/TempHum_Results"), 
 				title = "Select file", 
