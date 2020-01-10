@@ -5,8 +5,10 @@ import matplotlib.gridspec as gridspec
 import numpy as np
 import pandas as pd
 import tkinter as tk
-from tkinter import filedialog
-import datetime, os
+from tkinter.filedialog import askopenfilename
+import datetime
+import sys
+import os
 
 #othert = df['H']
 #s1t = df['D']
@@ -20,8 +22,8 @@ import datetime, os
 #twoh = otherh.append(s1h, ignore_index=True)
 #allh = twoh.append(s2h, ignore_index=True)
 
-
-
+homedir = os.environ['HOME']
+sys.path.append(homedir + '/TempHum_Results')
 
 
 
@@ -32,9 +34,9 @@ class Buttons():
 		w = tk.Tk(screenName = None, baseName = None, className = " Main Control Panel", useTk = 1)
 		w.title("Control Panel")
 
-		self.lab1 = tk.Label(w, text = "Close the program.", wraplength = "150")
+		self.lab1 = tk.Label(w, text = "Close the program.", width = "50")
 		self.lab1.grid(row = 2, column = 2, padx = "10")
-		self.lab2 = tk.Label(w, text = "Choose a file in which to graph temperature and humidity values.", wraplength = "150")
+		self.lab2 = tk.Label(w, text = "Choose a file in which to graph temperature and humidity values.", width = "50")
 		self.lab2.grid(row = 2, column = 1, padx = "10")
 		self.but1 = tk.Button(w, text = "Close Window", command = w.destroy)
 		self.but1.grid(row = 1, column = 2, pady = "10", padx = "10")
@@ -110,12 +112,7 @@ class Buttons():
 		plt.show()
 
 	def newfile(self):
-		direc = os.environ['HOME']
-		file = pd.read_csv(filedialog.askopenfilename(
-			initialdir = (os.environ['HOME'] + "/TempHum_Results"), 
-				title = "Select file", 
-				filetypes = [("Spreadsheets", "*.csv")]),
-			sep=',', index_col=1)
+		file = pd.read_csv(askopenfilename(), sep=',', index_col=1)
 		#file = pd.read_csv("/home/pi/TempHum_Results/2019-12-19_results.csv", sep=',', index_col=1)
 		return file
 
