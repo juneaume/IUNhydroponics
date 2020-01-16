@@ -1,42 +1,22 @@
 import matplotlib.pyplot as plt
 import matplotlib
-import matplotlib.mlab as mlab
-import matplotlib.gridspec as gridspec
+import matplotlib.dates as mdates
 import numpy as np
 import pandas as pd
 import tkinter as tk
-from tkinter.filedialog import askopenfilename
-import datetime
-import sys
-import os
-
-#othert = df['H']
-#s1t = df['D']
-#s2t = df['F']
-#twot = othert.append(s1t, ignore_index=True)
-#allt = twot.append(s2t, ignore_index=True)
-
-#otherh = df['I']
-#s1h = df['E']
-#s2h = df['G']
-#twoh = otherh.append(s1h, ignore_index=True)
-#allh = twoh.append(s2h, ignore_index=True)
-
-homedir = os.environ['HOME']
-sys.path.append(homedir + '/TempHum_Results')
-
+from tkinter import filedialog
+import datetime, os
+from datetime import time
 
 
 class Buttons():
-
-
 	def __init__(self):
 		w = tk.Tk(screenName = None, baseName = None, className = " Main Control Panel", useTk = 1)
 		w.title("Control Panel")
 
-		self.lab1 = tk.Label(w, text = "Close the program.", width = "50")
+		self.lab1 = tk.Label(w, text = "Close the program.", wraplength = "150")
 		self.lab1.grid(row = 2, column = 2, padx = "10")
-		self.lab2 = tk.Label(w, text = "Choose a file in which to graph temperature and humidity values.", width = "50")
+		self.lab2 = tk.Label(w, text = "Choose a file in which to graph temperature and humidity values.", wraplength = "150")
 		self.lab2.grid(row = 2, column = 1, padx = "10")
 		self.but1 = tk.Button(w, text = "Close Window", command = w.destroy)
 		self.but1.grid(row = 1, column = 2, pady = "10", padx = "10")
@@ -60,6 +40,8 @@ class Buttons():
 		df =  pd.DataFrame(self.newfile())
 		times = df.index
 
+		hours = [datetime.time.isoformat(datetime.time(i, 0, 0, 0)) for i in range(24)]
+
 		df.set_axis(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'], axis='columns', inplace=True)
 
 		atemps = df['B']
@@ -69,10 +51,13 @@ class Buttons():
 
 		ax1 = plt.subplot(211)
 		ax1.plot(times, atemps, color="green")
-		plt.xlim(min(times), max(times))
+		#plt.xlim(min(hours), max(hours))
 		#plt.ylim(min(allt), max(allt))
 		plt.ylabel('Temperature (*C)')
-		plt.xticks(self.xtickval(times))
+		#plt.xticks(self.xtickval(times))
+		#plt.xticks(hours)
+		ax1.xaxis.set_major_locator(mdates.HourLocator(interval = 1))
+		ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
 		plt.setp(ax1.get_xticklabels(), rotation = -25, ha = "left")
 
 		offset = -72
@@ -112,7 +97,11 @@ class Buttons():
 		plt.show()
 
 	def newfile(self):
-		file = pd.read_csv(askopenfilename(), sep=',', index_col=1)
+		file = pd.read_csv(filedialog.askopenfilename(
+			initialdir = (os.environ['HOME'] + "/TempHum_Results"), 
+				title = "Select file", 
+				filetypes = [("Spreadsheets", "*.csv")]),
+			sep=',', index_col=1)
 		#file = pd.read_csv("/home/pi/TempHum_Results/2019-12-19_results.csv", sep=',', index_col=1)
 		return file
 
