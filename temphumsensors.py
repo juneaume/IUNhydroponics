@@ -3,6 +3,9 @@ import time
 import RPi.GPIO as GPIO
 import Adafruit_DHT
 import os.path
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
 
 ##Expert code brought to you by Brittany Armstrong
 
@@ -34,7 +37,7 @@ while True:
 		toUse = []
 		avg = sum(values)/len(values)
 		for x in range(len(values)):
-			if not (values[x] < 0.9 * avg) or (values[x] > 1.1 * avg):
+			if not (values[x] < 0.95 * avg) or (values[x] > 1.05 * avg):
 				toUse.append(values[x])
 		return sum(toUse)/len(toUse)
 
@@ -49,6 +52,7 @@ while True:
 		data1 = "{:.2f},{:.2f},{:.2f},{:.2f},{:.2f},{:.2f},{:.2f},{:.2f}" .format(
 			avg(temps), avg(hums), temps[0], hums[0], temps[1], hums[1], temps[2], hums[2])
 
+		global timestamp
 		timestamp = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 		date = datetime.datetime.now().strftime("%Y-%m-%d")
 
@@ -58,20 +62,64 @@ while True:
 			file = open("/home/pi/TempHum_Results/" + date + "_results.csv", "a")
 			file.write("Date,Time,AvgTemp,AvgHum,S1Temp,S1Hum,S2Temp,S2Hum,S3Temp,S3Hum\n")
 			file.write(string)
+
 		else:
 			file = open("/home/pi/TempHum_Results/" + date + "_results.csv", "a")
 			file.write(string)
 
+		#fig = plt.figure()
+		#ax1 = fig.add_subplot(1,1,1)
 
-		print(timestamp + "\t Average: {:.2f}*C, {:.2f}% \t Sensor 1: {:.2f}*C, {:.2f}% \t Sensor 2: {:.2f}*C, {:.2f}% \t Sensor 3: {:.2f}*C, {:.2f}%" .format(
-			avg(temps), avg(hums), temps[0], hums[0], temps[1], hums[1], temps[2], hums[2]))
+
+		#def animate(i):
+		#	xar = timestamp
+		#	y1ar = avg(temps)
+		#	y2ar = avg(hums)
+
+		#	ax1.clear()
+		#	ax1.plot(xar, y1ar, label = "Average Temperature")
+		#	ax1.plot(xar, y2ar, label = "Average Humidity")
+
+		#	def xtickval(self, value):
+		#		toUse = []
+		#		for i in range(len(value)):
+		#			if len(value) < 25:
+		#				toUse.append(value[i])
+		#			elif len(value) < 300:
+		#				if (i % 10 ==0) == True:
+		#					toUse.append(value[i])
+		#			elif len(value) > 300:
+		#				if (i % 50 ==0) == True:
+		#					toUse.append(value[i])
+		#		return toUse
+
+		#	plt.xticks(self.xtickval(xar))
+		#	plt.suptitle("Live Temperature and Humidity")
+		#	plt.grid(True)
+		#	plt.legend()
+		#	plt.setp(ax1.get_xticklabels(), rotation = -25, ha = "left")
+
+#		ani = animation.FuncAnimation(fig, animate, interval = 10000)
+
+#		mng = plt.get_current_fig_manager()
+#		mng.resize(*mng.window.maxsize())
+
+#		plt.show()
+
+
 	except RuntimeError as error:
 		print(error.args[0])
 		destroy()
 
 	GPIO.output(chan_list, GPIO.HIGH)
-
 	file.close()
+
+	#from livegraphtest import liveGraph
+	#liveGraph()
+
+	#print(timestamp + "\t Average: {:.2f}*C, {:.2f}% \t Sensor 1: {:.2f}*C, {:.2f}% \t Sensor 2: {:.2f}*C, {:.2f}% \t Sensor 3: {:.2f}*C, {:.2f}%" .format(
+		#avg(temps), avg(hums), temps[0], hums[0], temps[1], hums[1], temps[2], hums[2]))
+
 	time.sleep(279.0)
 
 
