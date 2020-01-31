@@ -14,11 +14,11 @@ class liveGraph():
 
 		self.lab1 = tk.Label(w, text = "Close the program.", wraplength = "150")
 		self.lab1.grid(row = 2, column = 2, padx = "10")
-		self.lab2 = tk.Label(w, text = "Choose a file in which to import temperature and humidity data.", wraplength = "150")
+		self.lab2 = tk.Label(w, text = "Opens todays data within a graph", wraplength = "150")
 		self.lab2.grid(row = 2, column = 1, padx = "10")
 		self.but1 = tk.Button(w, text = "Close Window", command = w.destroy)
 		self.but1.grid(row = 1, column = 2, pady = "10", padx = "10")
-		self.but2 = tk.Button(w, text = "Choose Data", command = self.plot)
+		self.but2 = tk.Button(w, text = "Graph", command = self.plot)
 		self.but2.grid(row = 1, column = 1, padx = "10")
 
 		w.mainloop()
@@ -28,7 +28,9 @@ class liveGraph():
 			initialdir = (os.environ['HOME'] + "/TempHum_Results"),
 				title = "Select file",
 				filetypes = [("Spreadsheets", "*.csv")])
-		#file = pd.read_csv("/home/pi/TempHum_Results/2019-12-19_results.csv", sep=',', index_col=1)
+
+#		print(path)
+#		file = pd.read_csv(path, sep=',', index_col=1)
 		return file
 
 
@@ -51,14 +53,15 @@ class liveGraph():
 
 
 	def plot(self):
-
-		fig = plt.figure()
-		ax1 = fig.add_subplot(1,1,1)
-
-		global file
-		file = self.newfile()
+		fig, ax1 = plt.subplots(facecolor='grey')
+		ax1.set_facecolor('grey')
 
 		def animate(i):
+			date = datetime.datetime.now().strftime("%Y-%m-%d")
+			file = os.environ['HOME'] + "/TempHum_Results/" + date + "_results.csv"
+
+			#file = self.newfile()
+
 			df = pd.DataFrame(pd.read_csv(file, sep=',', index_col=1))
 			df.set_axis(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'], axis = 'columns', inplace = True)
 
@@ -67,8 +70,8 @@ class liveGraph():
 			y2ar = df['C']
 
 			ax1.clear()
-			ax1.plot(xar, y1ar, label = "Average Temperature")
-			ax1.plot(xar, y2ar, label = "Average Humidity")
+			ax1.plot(xar, y1ar, label = "Average Temperature (*C)")
+			ax1.plot(xar, y2ar, label = "Average Humidity (%)")
 			plt.xticks(self.xtickval(xar))
 			plt.suptitle("Temperature and Humidity for " + df.iloc[1]['A'])
 			plt.grid(True)
