@@ -65,23 +65,15 @@ class Buttons():
 		times = []
 
 		date = datetime.date.today()
-		range = []
+		length = []
 		delta = timedelta(days = 1)
 
-		if val == 1:
+		for i in range(num):
 			date = date - delta
-			range.append(date)
-		elif val == 7:
-			for i in range(7):
-				date =  date - delta
-				range.append(date)
-		elif val == 30:
-			for i in range(30):
-				date = date - delta
-				range.append(date)
+			length.append(date)
 
-		for j in range(len(range)):
-			fdate = range[j].strftime("%Y-%m-%d")
+		for j in range(len(length)):
+			fdate = length[j].strftime("%Y-%m-%d")
 			df = pd.DataFrame(pd.read_csv((os.environ['HOME'] + "/TempHum_Results/" + fdate + "_results.csv"), sep=',', index_col=1))
 			df.set_axis(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'], axis='columns', inplace=True)
 
