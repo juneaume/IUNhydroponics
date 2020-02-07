@@ -12,6 +12,28 @@ class Buttons():
 		w = tk.Tk(screenName = None, baseName = None, className = " Main Control Panel", useTk = 1)
 		w.title("Control Panel")
 
+		def opentl():
+			w2 = Toplevel(w)
+			w2.title("Select Time Period")
+			w2.withdraw()
+
+			frame1 = Frame(w2)
+			frame1.pack()
+
+			self.v = tk.IntVar()
+			rbyes = Radiobutton(frame1, text = "Yesterday", variable = self.v, value = '1', command = self.v.set("1"))
+			rbyes.grid(row = 1, column = 1)
+			rblw = Radiobutton(frame1, text = "Last week", variable = self.v, value = '2', command = self.v.set("2"))
+			rblw.grid(row = 1, column = 2)
+			rblm = Radiobutton(frame1, text = "Last month", variable = self.v, value = '3', command = self.v.set("3"))
+			rblm.grid(row = 1, column = 3)
+			frame2 = Frame(w2)
+			frame2.pack()
+			self.but4 = tk.Button(frame2, text = "Graph", command = self.processRb)
+			self.but4.grid(row = 1, column = 2, padx = "10")
+			w2.mainloop()
+
+
 		self.lab1 = tk.Label(w, text = "Close the program.", wraplength = "150")
 		self.lab1.grid(row = 2, column = 3, padx = "10")
 		self.lab2 = tk.Label(w, text = "Graphs a chosen dataset", wraplength = "150")
@@ -22,31 +44,11 @@ class Buttons():
 		self.but1.grid(row = 1, column = 3, pady = "10", padx = "10")
 		self.but2 = tk.Button(w, text = "Graph 1 Day", command = self.plot)
 		self.but2.grid(row = 1, column = 2, padx = "10")
-		self.but3 = tk.Button(w, text = "Show Previous Trends", command = self.daysel)
+		self.but3 = tk.Button(w, text = "Show Previous Trends", command = opentl)
 		self.but3.grid(row = 1, column = 1, padx = "10")
 
+
 		w.mainloop()
-
-	def daysel(self):
-		w2 = tk.Tk(screenName = None, baseName = None, className = " Select Time Period", useTk = 1)
-		w2.title("Select Time Period")
-
-		frame1 = Frame(w2)
-		frame1.pack()
-		self.v = tk.IntVar()
-		self.v.set("2")
-		rbyes = Radiobutton(frame1, text = "Yesterday", variable = self.v, value = '1')
-		rbyes.grid(row = 1, column = 1)
-		rblw = Radiobutton(frame1, text = "Last week", variable = self.v, value = '2')
-		rblw.grid(row = 1, column = 2)
-		rblm = Radiobutton(frame1, text = "Last month", variable = self.v, value = '3')
-		rblm.grid(row = 1, column = 3)
-		frame2 = Frame(w2)
-		frame2.pack()
-		self.but4 = tk.Button(frame2, text = "Graph", command = self.processRb)
-		self.but4.grid(row = 1, column = 2, padx = "10")
-
-		w2.mainloop()
 
 	def processRb(self):
 		print(self.v.get())
@@ -68,7 +70,7 @@ class Buttons():
 		length = []
 		delta = timedelta(days = 1)
 
-		for i in range(num):
+		for i in range(val):
 			date = date - delta
 			length.append(date)
 
@@ -81,15 +83,19 @@ class Buttons():
 			counttime = len(time)
 			divtime = counttime // 8
 			tt = 0
-			times.append(time[tt])
+
+			fdate2 = length[j].strftime("%d %b")
+			times.append(time[tt] + ", " + fdate2)
 			atemps.append(df.iloc[tt]['B'])
 			ahums.append(df.iloc[tt]['C'])
 
 			for k in range(7):
 				tt += divtime
-				times.append(time[tt])
+				times.append(time[tt] + ", " + fdate2)
 				atemps.append(df.iloc[tt]['B'])
 				ahums.append(df.iloc[tt]['C'])
+
+		times.reverse()
 
 		plt.figure()
 		ax1 = plt.subplot(211)
@@ -131,8 +137,8 @@ class Buttons():
 		#	bbox = bbox, arrowprops = arrowprops)
 		plt.grid(True)
 #		plt.legend(bbox_to_anchor = (1.001, 1), loc = 'upper left', borderaxespad = 0)
-
-		plt.suptitle("Temperature and Humidity for " + str(week[6]) + " to " + str(week[0]))
+		val -= 1
+		plt.suptitle("Temperature and Humidity for " + str(length[val]) + " to " + str(length[0]))
 
 
 		mng = plt.get_current_fig_manager()
