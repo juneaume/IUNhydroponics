@@ -37,8 +37,9 @@ while True:
 		toUse = []
 		avg = sum(values)/len(values)
 		for x in range(len(values)):
-			if not (values[x] < 0.95 * avg) or (values[x] > 1.05 * avg):
-				toUse.append(values[x])
+			if not (values[x] < 0.95 * avg):
+				if not (values[x] > 1.05 * avg):
+					toUse.append(values[x])
 		return sum(toUse)/len(toUse)
 
 	GPIO.output(chan_list, GPIO.LOW)
