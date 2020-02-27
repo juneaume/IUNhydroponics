@@ -3,7 +3,7 @@ import time
 import RPi.GPIO as GPIO
 import Adafruit_DHT
 import os.path
-
+import math
 
 ##Expert code brought to you by Brittany Armstrong with assistance from Nicholas Bibeau
 
@@ -48,13 +48,21 @@ while True:
 
 		toUse = []
 		## Taking a temporary average of non-zero numbers
-		avg = sum(nums)/len(nums)
+		mean = sum(nums)/len(nums)
 
-		## Looking at non-zero numbers for values that are over 5% different from the average and removing them
-		for x in range(len(nums)):
-			if not (nums[x] < 0.95 * avg) or (nums[x] > 1.05 * avg):
-				## Adding values that are within 5% of average to the list for final average 
-				toUse.append(nums[x])
+		## Computing the standard deviation of values
+		numerator = []
+		for j in range(len(nums)):
+			numerator.append((nums[j] - mean)**2)
+		stdev = math.sqrt(sum(numerator) / len(nums))
+
+		## Looking at z-score to remove values greater than 1 deviation away from mean
+		for k in range(len(nums)):
+			zscore = (nums[k] - mean) / stdev
+			if not (zscore <= 1):
+				if not (zscore >= -1):
+					toUse.append(nums[k])
+
 		## Computing a new average and returning the value
 		return sum(toUse)/len(toUse)
 

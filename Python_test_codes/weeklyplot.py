@@ -100,43 +100,18 @@ class Buttons():
 		plt.figure()
 		ax1 = plt.subplot(211)
 		ax1.plot(times, atemps, color = "black", label = "Average", linewidth = 3.0)
-#		ax1.plot(times, df['D'], color = "green", label = "Sensor 1")
-#		ax1.plot(times, df['F'], color = "blue", label = "Sensor 2")
-#		ax1.plot(times, df['H'], color = "purple", label = "Sensor 3")
-#		plt.xlim(min(times), max(times))
-		#plt.ylim(min(allt), max(allt))
 		plt.ylabel('Temperature (*C)')
 		plt.xticks(self.xtickval(times))
 		plt.setp(ax1.get_xticklabels(), rotation = -25, ha = "left")
-		#offset = -72
-		#bbox = dict(boxstyle="round", fc="0.8")
-		#arrowprops = dict(arrowstyle = "->", connectionstyle = "angle, angleA = 0, angleB = 90, rad = 10")
-		#ax1.annotate((
-		#	"Maximum " + str(atemps.max()) + '*C at' + str(atemps.idxmax())),
-		#	xy=(atemps.idxmax(), atemps.max()),
-		#	xytext=(offset, 2.5*offset), textcoords='offset points',
-		#	bbox=bbox, arrowprops = arrowprops)
 		plt.grid(True)
-#		plt.legend(bbox_to_anchor = (1.001, 1), loc = 'upper left', borderaxespad = 0)
+
 
 		ax2 = plt.subplot(212)
 		ax2.plot(times, ahums, color = "black", label = "Average", linewidth = 3.0)
-#		ax2.plot(times, df['E'], color = "green", label = "Sensor 1")
-#		ax2.plot(times, df['G'], color = "blue", label = "Sensor 2")
-#		ax2.plot(times, df['I'], color = "purple", label = "Sensor 3")
-#		plt.xlim(min(times), max(times))
-		#plt.ylim(min(allh), max(allh))
-#		plt.xlabel('Time between' + str(min(times)) + 'and' + str(max(times)))
 		plt.ylabel('Humidity (%)')
 		plt.xticks(self.xtickval(times))
 		plt.setp(ax2.get_xticklabels(), rotation = -25, ha = "left")
-		#ax2.annotate((
-		#	"Maximum " + str(ahums.max()) + '% at' + str(ahums.idxmax())),
-		#	xy=(ahums.idxmax(), ahums.max()),
-		#	xytext=(offset, 2.5*offset), textcoords='offset points',
-		#	bbox = bbox, arrowprops = arrowprops)
 		plt.grid(True)
-#		plt.legend(bbox_to_anchor = (1.001, 1), loc = 'upper left', borderaxespad = 0)
 		val -= 1
 		plt.suptitle("Temperature and Humidity for " + str(length[val]) + " to " + str(length[0]))
 
@@ -172,8 +147,6 @@ class Buttons():
 		ax1.plot(times, df['D'], color = "green", label = "Sensor 1")
 		ax1.plot(times, df['F'], color = "blue", label = "Sensor 2")
 		ax1.plot(times, df['H'], color = "purple", label = "Sensor 3")
-		plt.xlim(min(times), max(times))
-		#plt.ylim(min(allt), max(allt))
 		plt.ylabel('Temperature (*C)')
 		plt.xticks(self.xtickval(times))
 		plt.setp(ax1.get_xticklabels(), rotation = -25, ha = "left")
@@ -193,8 +166,6 @@ class Buttons():
 		ax2.plot(times, df['E'], color = "green", label = "Sensor 1")
 		ax2.plot(times, df['G'], color = "blue", label = "Sensor 2")
 		ax2.plot(times, df['I'], color = "purple", label = "Sensor 3")
-		plt.xlim(min(times), max(times))
-		#plt.ylim(min(allh), max(allh))
 		plt.xlabel('Time between' + str(min(times)) + 'and' + str(max(times)))
 		plt.ylabel('Humidity (%)')
 		plt.xticks(self.xtickval(times))
@@ -219,7 +190,7 @@ class Buttons():
 				title = "Select file", 
 				filetypes = [("Spreadsheets", "*.csv")]),
 			sep=',', index_col=1)
-		#file = pd.read_csv("/home/pi/TempHum_Results/2019-12-19_results.csv", sep=',', index_col=1)
+
 		return file
 
 Buttons()
